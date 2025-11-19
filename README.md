@@ -302,6 +302,22 @@ User Action → Provider → Service → API → Response
 
 ---
 
+## Limitations
+
+- **No backend integration:** The app currently does not connect to any backend server or database. All data is static or locally stored within the app.
+- **No caching mechanism** - App requires active internet connection for most features
+- **API rate limiting** - Dependent on external API quotas and availability
+- **SOS not connected to authorities** - Emergency signals are simulated, not actually sent to 999
+- **No two-way communication** - Users can't receive responses from emergency services
+
+## Future Works
+
+- **Backend Integration** Handling the backend (user authentication, local updates) through Firebase
+- **Improved Security Feature** Allows authorities to auto locate and last geo-coordinate is sent out to all registered emergency contacts
+- **Inclusive Support** Offline and supporting multi-lingual option
+
+
+
 ## 🧪 Testing
 
 ```bash
