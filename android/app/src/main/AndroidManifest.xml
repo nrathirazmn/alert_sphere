@@ -5,7 +5,7 @@
     <uses-permission android:name="android.permission.CAMERA"/>
     
     <application
-        android:label="SafeLink"
+        android:label="ALERT_SPHERE"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         

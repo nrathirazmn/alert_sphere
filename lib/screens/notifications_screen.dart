@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'dart:ui'; // Import for BackdropFilter/Glassmorphism
 
 class NotificationsScreen extends StatelessWidget {
   const NotificationsScreen({Key? key}) : super(key: key);
@@ -38,134 +39,108 @@ class NotificationsScreen extends StatelessWidget {
     ];
 
     return Scaffold(
+      extendBodyBehindAppBar: true, // Crucial for transparent AppBar
       appBar: AppBar(
-        title: const Text('Notifications'),
+        backgroundColor: Colors.transparent, // Match AlertSphere style
+        elevation: 0,
+        foregroundColor: Colors.black, 
+        title: const Text(
+          'Notifications',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 22,
+          ),
+        ),
         actions: [
           TextButton(
-            onPressed: () {},
+            onPressed: () {
+              // Add mark all read logic here
+            },
             child: const Text(
               'Mark all read',
-              style: TextStyle(color: Colors.white),
+              style: TextStyle(color: Colors.white70), // Lightened text for AppBar
             ),
           ),
         ],
       ),
-      body: notifications.isEmpty
-          ? Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(
-                    Icons.notifications_off_outlined,
-                    size: 80,
-                    color: Colors.grey.shade300,
-                  ),
-                  const SizedBox(height: 16),
-                  Text(
-                    'No notifications yet',
-                    style: TextStyle(
-                      fontSize: 18,
-                      color: Colors.grey.shade600,
+      body: Container(
+        // AlertSphere Background Gradient
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              const Color(0xFFFF6B35).withOpacity(0.1),
+              const Color(0xFFE63946).withOpacity(0.05),
+              const Color(0xFFFF9F1C).withOpacity(0.1),
+            ],
+          ),
+        ),
+        child: notifications.isEmpty
+            ? Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.notifications_off_outlined,
+                      size: 80,
+                      color: Colors.grey.shade400,
                     ),
-                  ),
-                ],
+                    const SizedBox(height: 16),
+                    Text(
+                      'No notifications yet',
+                      style: TextStyle(
+                        fontSize: 18,
+                        color: Colors.grey.shade600,
+                      ),
+                    ),
+                  ],
+                ),
+              )
+            : ListView.builder(
+                // Add padding to push content below the transparent AppBar
+                padding: EdgeInsets.only(
+                  top: MediaQuery.of(context).padding.top + kToolbarHeight,
+                  bottom: 16,
+                  left: 16,
+                  right: 16,
+                ),
+                itemCount: notifications.length,
+                itemBuilder: (context, index) {
+                  final notification = notifications[index];
+                  // PASSING THE INDEX TO THE CARD
+                  return _buildNotificationCard(notification, context, index);
+                },
               ),
-            )
-          : ListView.builder(
-              itemCount: notifications.length,
-              itemBuilder: (context, index) {
-                final notification = notifications[index];
-                return _buildNotificationCard(notification, context);
-              },
-            ),
+      ),
     );
   }
 
-  Widget _buildNotificationCard(Map<String, dynamic> notification, BuildContext context) {
-    Color getTypeColor() {
-      switch (notification['type']) {
-        case 'critical':
-          return Colors.red;
-        case 'warning':
-          return Colors.orange;
-        case 'success':
-          return Colors.green;
-        default:
-          return Colors.blue;
-      }
+  // Helper functions used in the card
+  Color _getTypeColor(String? type) {
+    switch (type) {
+      case 'critical':
+        return const Color(0xFFD32F2F); // Dark Red
+      case 'warning':
+        return Colors.orange.shade700;
+      case 'success':
+        return Colors.green.shade600;
+      default:
+        return Colors.blue.shade600;
     }
+  }
 
-    IconData getTypeIcon() {
-      switch (notification['type']) {
-        case 'critical':
-          return Icons.warning;
-        case 'warning':
-          return Icons.error_outline;
-        case 'success':
-          return Icons.check_circle_outline;
-        default:
-          return Icons.info_outline;
-      }
+  IconData _getTypeIcon(String? type) {
+    switch (type) {
+      case 'critical':
+        return Icons.sos;
+      case 'warning':
+        return Icons.error_outline;
+      case 'success':
+        return Icons.check_circle_outline;
+      default:
+        return Icons.info_outline;
     }
-
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      decoration: BoxDecoration(
-        color: notification['read'] ? Colors.white : Colors.orange.shade50,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: notification['read'] ? Colors.grey.shade200 : Colors.orange.shade200,
-          width: 1,
-        ),
-      ),
-      child: ListTile(
-        contentPadding: const EdgeInsets.all(16),
-        leading: Container(
-          padding: const EdgeInsets.all(12),
-          decoration: BoxDecoration(
-            color: getTypeColor().withOpacity(0.1),
-            shape: BoxShape.circle,
-          ),
-          child: Icon(
-            getTypeIcon(),
-            color: getTypeColor(),
-          ),
-        ),
-        title: Text(
-          notification['title'],
-          style: TextStyle(
-            fontWeight: notification['read'] ? FontWeight.normal : FontWeight.bold,
-            fontSize: 16,
-          ),
-        ),
-        subtitle: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const SizedBox(height: 4),
-            Text(notification['body']),
-            const SizedBox(height: 8),
-            Text(
-              _formatNotificationTime(notification['time']),
-              style: TextStyle(
-                fontSize: 12,
-                color: Colors.grey.shade600,
-              ),
-            ),
-          ],
-        ),
-        trailing: !notification['read']
-            ? Container(
-                width: 10,
-                height: 10,
-                decoration: const BoxDecoration(
-                  color: Color(0xFFFF6B35),
-                  shape: BoxShape.circle,
-                ),
-              )
-            : null,
-        onTap: () {},
-      ),
-    );
   }
 
   String _formatNotificationTime(DateTime time) {
@@ -181,5 +156,122 @@ class NotificationsScreen extends StatelessWidget {
     } else {
       return DateFormat('MMM d, y').format(time);
     }
+  }
+  
+  // --- Glassmorphism Notification Card ---
+  // MODIFIED TO ACCEPT INDEX
+  Widget _buildNotificationCard(Map<String, dynamic> notification, BuildContext context, int index) {
+    final color = _getTypeColor(notification['type'] as String?);
+    final bool isRead = notification['read'] as bool? ?? true;
+    
+    // CONDITIONALLY INCREASE MARGIN FOR THE FIRST CARD (index 0)
+    final double bottomMargin = index == 0 ? 30.0 : 12.0; 
+
+    return Container(
+      margin: EdgeInsets.only(bottom: bottomMargin),
+      decoration: BoxDecoration(
+        // Glassmorphism background effect (unifying the style)
+        gradient: LinearGradient(
+          colors: [
+            Colors.white.withOpacity(isRead ? 0.2 : 0.4), // Unread is slightly brighter
+            Colors.white.withOpacity(0.1),
+          ],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: isRead ? Colors.white.withOpacity(0.3) : color.withOpacity(0.5), // Highlight unread border
+          width: 1.5,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: color.withOpacity(0.1),
+            blurRadius: 10,
+            offset: const Offset(0, 5),
+          ),
+        ],
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(16),
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10), // The blur effect
+          child: InkWell(
+            onTap: () {
+              // Handle notification tap logic
+            },
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Icon Area
+                  Container(
+                    padding: const EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      color: color.withOpacity(0.2),
+                      shape: BoxShape.circle,
+                    ),
+                    child: Icon(
+                      _getTypeIcon(notification['type'] as String?),
+                      color: color,
+                      size: 24,
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  
+                  // Text Content
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          notification['title'] as String,
+                          style: TextStyle(
+                            fontWeight: isRead ? FontWeight.w600 : FontWeight.bold,
+                            fontSize: 16,
+                            color: Colors.black87,
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          notification['body'] as String,
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: Colors.grey.shade700,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          _formatNotificationTime(notification['time'] as DateTime),
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: Colors.grey.shade500,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  
+                  // Unread Indicator
+                  if (!isRead)
+                    Padding(
+                      padding: const EdgeInsets.only(left: 8, top: 4),
+                      child: Container(
+                        width: 8,
+                        height: 8,
+                        decoration: const BoxDecoration(
+                          color: Color(0xFFFF6B35), // AlertSphere orange/red
+                          shape: BoxShape.circle,
+                        ),
+                      ),
+                    ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
   }
 }

@@ -9,7 +9,10 @@ class Incident {
   final bool isVerified;
   final int upvotes;
   final int comments;
-  final String? imageUrl;
+  
+  // Real coordinates from the data
+  final double? latitude;
+  final double? longitude;
 
   Incident({
     required this.id,
@@ -18,13 +21,18 @@ class Incident {
     required this.location,
     required this.timestamp,
     required this.urgency,
-    this.status = 'Active',
-    this.isVerified = false,
-    this.upvotes = 0,
-    this.comments = 0,
-    this.imageUrl,
+    required this.status,
+    required this.isVerified,
+    required this.upvotes,
+    required this.comments,
+    this.latitude,
+    this.longitude,
   });
 
+  // Check if incident has valid coordinates
+  bool get hasCoordinates => latitude != null && longitude != null;
+
+  // copyWith method - allows creating a copy with some fields changed
   Incident copyWith({
     String? id,
     String? type,
@@ -36,7 +44,8 @@ class Incident {
     bool? isVerified,
     int? upvotes,
     int? comments,
-    String? imageUrl,
+    double? latitude,
+    double? longitude,
   }) {
     return Incident(
       id: id ?? this.id,
@@ -49,7 +58,42 @@ class Incident {
       isVerified: isVerified ?? this.isVerified,
       upvotes: upvotes ?? this.upvotes,
       comments: comments ?? this.comments,
-      imageUrl: imageUrl ?? this.imageUrl,
+      latitude: latitude ?? this.latitude,
+      longitude: longitude ?? this.longitude,
     );
+  }
+
+  factory Incident.fromJson(Map<String, dynamic> json) {
+    return Incident(
+      id: json['id'] ?? '',
+      type: json['type'] ?? 'Other',
+      description: json['description'] ?? '',
+      location: json['location'] ?? 'Unknown',
+      timestamp: DateTime.parse(json['timestamp'] ?? DateTime.now().toString()),
+      urgency: json['urgency'] ?? 'Medium',
+      status: json['status'] ?? 'Active',
+      isVerified: json['isVerified'] ?? false,
+      upvotes: json['upvotes'] ?? 0,
+      comments: json['comments'] ?? 0,
+      latitude: json['latitude']?.toDouble(),
+      longitude: json['longitude']?.toDouble(),
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'type': type,
+      'description': description,
+      'location': location,
+      'timestamp': timestamp.toIso8601String(),
+      'urgency': urgency,
+      'status': status,
+      'isVerified': isVerified,
+      'upvotes': upvotes,
+      'comments': comments,
+      'latitude': latitude,
+      'longitude': longitude,
+    };
   }
 }

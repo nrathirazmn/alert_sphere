@@ -3,13 +3,13 @@
 <plist version="1.0">
 <dict>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>SafeLink needs your location to show nearby incidents and help you report accurately.</string>
+	<string>AlertSphere needs your location to show nearby incidents and help you report accurately.</string>
 	<key>NSLocationAlwaysUsageDescription</key>
-	<string>SafeLink needs your location to send alerts about incidents near you.</string>
+	<string>AlertSphere needs your location to send alerts about incidents near you.</string>
 	<key>NSCameraUsageDescription</key>
-	<string>SafeLink needs camera access to let you capture incident photos.</string>
+	<string>AlertSphere needs camera access to let you capture incident photos.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>SafeLink needs photo library access to let you select incident photos.</string>
+	<string>AlertSphere needs photo library access to let you select incident photos.</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>

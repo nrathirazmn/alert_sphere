@@ -11,16 +11,21 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  String selectedRole = 'Community';
+  // Retained state, but now only ever set to 'Community'
+  String selectedRole = 'Community'; 
 
   @override
   Widget build(BuildContext context) {
+    // Note: The selectedRole is always 'Community' but we keep the state structure for safety.
+    final Color primaryColor = const Color(0xFFFF6B35); 
+
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(
+          // Soft gradient background
           gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
             colors: [
               Color(0xFFFFF8F0),
               Color(0xFFFFE8D6),
@@ -34,28 +39,30 @@ class _LoginScreenState extends State<LoginScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
+                  // Icon Section
                   Container(
-                    padding: const EdgeInsets.all(20),
+                    padding: const EdgeInsets.all(0),
                     decoration: BoxDecoration(
-                      color: const Color(0xFFFF6B35),
+                      color: primaryColor,
                       shape: BoxShape.circle,
                       boxShadow: [
                         BoxShadow(
-                          color: const Color(0xFFFF6B35).withOpacity(0.3),
+                          color: primaryColor.withOpacity(0.7),
                           blurRadius: 20,
                           spreadRadius: 5,
                         ),
                       ],
                     ),
-                    child: const Icon(
-                      Icons.shield_outlined,
-                      size: 60,
-                      color: Colors.white,
-                    ),
+                    child: Image.asset(
+                    'assets/Logo_AlertSphere.png', // Replace with your actual logo path
+                    height: 120, // Adjusted size for prominence
+                    fit: BoxFit.contain,
+                  ),
+                  
                   ),
                   const SizedBox(height: 24),
                   const Text(
-                    'Welcome to SafeLink',
+                    'Welcome to AlertSphere',
                     style: TextStyle(
                       fontSize: 32,
                       fontWeight: FontWeight.bold,
@@ -71,6 +78,8 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   ),
                   const SizedBox(height: 48),
+                  
+                  // Login Card Container
                   Container(
                     padding: const EdgeInsets.all(24),
                     decoration: BoxDecoration(
@@ -88,7 +97,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         const Text(
-                          'Select Your Role',
+                          'Continue as',
                           style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
@@ -96,24 +105,22 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                         ),
                         const SizedBox(height: 16),
+                        
+                        // FIX: Only show the "Community" Role Card
                         _buildRoleCard(
                           'Community',
                           'Report and view incidents in your area',
                           Icons.people_outline,
                         ),
-                        const SizedBox(height: 12),
-                        _buildRoleCard(
-                          'Authority',
-                          'Manage and verify incident reports',
-                          Icons.verified_user_outlined,
-                        ),
+                        
                         const SizedBox(height: 24),
                         SizedBox(
                           width: double.infinity,
                           child: ElevatedButton(
                             onPressed: () {
+                              // Action: Login as the selected role (which is always 'Community')
                               Provider.of<AuthProvider>(context, listen: false)
-                                  .login(selectedRole);
+                                  .login(selectedRole); 
                               Navigator.of(context).pushReplacement(
                                 MaterialPageRoute(
                                   builder: (_) => const HomeScreen(),
@@ -121,6 +128,8 @@ class _LoginScreenState extends State<LoginScreen> {
                               );
                             },
                             style: ElevatedButton.styleFrom(
+                              backgroundColor: primaryColor,
+                              foregroundColor: Colors.white,
                               padding: const EdgeInsets.symmetric(vertical: 16),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(12),
@@ -147,17 +156,21 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
+  // Modified to remove explicit selection logic, but visually highlights 'Community'
   Widget _buildRoleCard(String role, String description, IconData icon) {
-    final isSelected = selectedRole == role;
+    final isSelected = selectedRole == role; // Always true for 'Community' now
+    final Color primaryColor = const Color(0xFFFF6B35);
+
+    // Using an InkWell wrapped in GestureDetector to maintain ripple effect and tapping
     return GestureDetector(
-      onTap: () => setState(() => selectedRole = role),
+      onTap: () => setState(() => selectedRole = role), // Kept for future expandability
       child: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
           color: isSelected ? const Color(0xFFFFE8D6) : Colors.grey[100],
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
-            color: isSelected ? const Color(0xFFFF6B35) : Colors.transparent,
+            color: isSelected ? primaryColor : Colors.transparent,
             width: 2,
           ),
         ),
@@ -166,7 +179,7 @@ class _LoginScreenState extends State<LoginScreen> {
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: isSelected ? const Color(0xFFFF6B35) : Colors.grey[300],
+                color: isSelected ? primaryColor : Colors.grey[300],
                 borderRadius: BorderRadius.circular(10),
               ),
               child: Icon(
@@ -185,7 +198,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
-                      color: isSelected ? const Color(0xFFFF6B35) : Colors.black87,
+                      color: isSelected ? primaryColor : Colors.black87,
                     ),
                   ),
                   const SizedBox(height: 4),

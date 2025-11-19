@@ -9,9 +9,18 @@ class AuthProvider extends ChangeNotifier {
   String get userName => _userName;
   bool get isLoggedIn => _isLoggedIn;
 
+  // NEW METHOD: Allows external widgets (like EditProfileScreen) to update the user's name
+  void updateUserName(String newName) {
+    if (_userName != newName && newName.isNotEmpty) {
+      _userName = newName;
+      notifyListeners(); // Crucial: This updates the HomeScreen/ProfileScreen automatically
+    }
+  }
+
   void login(String role) {
     _userRole = role;
-    _userName = role == 'Authority' ? 'Officer Ahmad' : 'John Doe';
+    // Note: When logging in, we set the initial placeholder name based on the role
+    _userName = role == 'Authority' ? 'Officer Ahmad' : 'John Doe'; 
     _isLoggedIn = true;
     notifyListeners();
   }

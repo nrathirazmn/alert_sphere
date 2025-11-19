@@ -50,13 +50,14 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(
+          // Use your AlertSphere primary gradient
           gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
             colors: [
-              Color(0xFFFF6B35),
-              Color(0xFFE63946),
-              Color(0xFFFF9F1C),
+              Color(0xFFFF6B35), // Primary Red/Orange
+              Color(0xFFE63946), // Darker Red
+              Color(0xFFFF9F1C), // Orange Accent
             ],
           ),
         ),
@@ -68,28 +69,17 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Container(
-                    padding: const EdgeInsets.all(24),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      shape: BoxShape.circle,
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.2),
-                          blurRadius: 20,
-                          spreadRadius: 5,
-                        ),
-                      ],
-                    ),
-                    child: const Icon(
-                      Icons.warning_amber_rounded,
-                      size: 80,
-                      color: Color(0xFFFF6B35),
-                    ),
+                  // FIX: Replaced the decorative Icon/Container with the logo asset
+                  Image.asset(
+                    'assets/Logo_AlertSphere.png', // Replace with your actual logo path
+                    height: 300, // Adjusted size for prominence
+                    fit: BoxFit.contain,
                   ),
                   const SizedBox(height: 24),
+                  
+                  // FIX: Updated text to match the branding and color
                   const Text(
-                    'SafeLink',
+                    'AlertSphere',
                     style: TextStyle(
                       fontSize: 48,
                       fontWeight: FontWeight.bold,

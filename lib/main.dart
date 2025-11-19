@@ -11,18 +11,18 @@ void main() {
         ChangeNotifierProvider(create: (_) => AuthProvider()),
         ChangeNotifierProvider(create: (_) => IncidentProvider()),
       ],
-      child: const SafeLinkApp(),
+      child: const AlertSphereApp(),
     ),
   );
 }
 
-class SafeLinkApp extends StatelessWidget {
-  const SafeLinkApp({Key? key}) : super(key: key);
+class AlertSphereApp extends StatelessWidget {
+  const AlertSphereApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'SafeLink',
+      title: 'AlertSphere',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primarySwatch: Colors.orange,
